@@ -1,6 +1,5 @@
 from tkinter import *
 import tkinter.messagebox as msg
-import credentials as cr
 
 
 # pip install mysql-connector-python
@@ -111,3 +110,5 @@ class Windows():
 root = Tk()
 obj = Windows(root)
 root.mainloop()
+
+# Hihi haha
