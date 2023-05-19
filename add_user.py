@@ -9,6 +9,10 @@ from mysql.connector import Error
 
 py = sys.executable
 
+def checkEmail():
+    if "@" is not in email.get():
+        messagebox.showerror("Fehler", "Bitte geben Sie eine gültige E-Mail an!")  
+
 
 class AddUserWindow(Tk):
     def __init__(self):
@@ -24,9 +28,22 @@ class AddUserWindow(Tk):
         role = StringVar()
 
         # Eingaben überprüfen
+        
+        def lenCheck(to_check):
+            if len to_check == 0:
+                messagebox.showerror("Fehler", "Bitte geben Sie einen Benutzer an!")
+        
+        
+        
+        
         def addUser():
+            
+            
+            
+            
+            
             if len(firstname.get()) == 0 or len(lastname.get()) == 0 or len(email.get()) == 0 or len(
-                    role.get()) == 0:  # Ist eines der Eingabefelder leer?
+                    role.get()) == 0 or :  # Ist eines der Eingabefelder leer?
                 messagebox.showerror("Fehler", "Bitte geben Sie einen Benutzer an!")
             else:
                 g = 'TRUE'  # Verfügbarkeit des Buchs, wenn ein Buch neu eingepflegt wird, ist es auch logischerweise verfügbar
@@ -52,7 +69,18 @@ class AddUserWindow(Tk):
                 except Error:
                     messagebox.showerror("Fehler",
                                          "Fehler bei der Datenbankverbindung!")  # Schlägt die Verbinduung mmit der DB fehl, Error Message
-
+        
+        
+        
+        
+        
+        
+        def checkEmail():
+            if "@" is not in email.get():
+                messagebox.showerror("Fehler", "Bitte geben Sie eine gültige E-Mail an!") 
+        
+        
+        
         # Labels und Textfelder erstellen
         Label(self, text='').pack()
         Label(self, text='Benutzer hinzufügen:', bg='gray', fg='black', font=('Arial', 20, 'bold')).place(x=150, y=70)
