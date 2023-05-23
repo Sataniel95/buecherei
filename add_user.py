@@ -1,11 +1,11 @@
 from tkinter import *
+from tkinter import ttk
 from tkinter import messagebox
-
-# from tkinter import filedialog             wird nicht verwendet
 import os
 import sys
 import mysql.connector
 from mysql.connector import Error
+import db_conn
 
 py = sys.executable
 
@@ -13,10 +13,10 @@ py = sys.executable
 class AddUserWindow(Tk):
     def __init__(self):
         super().__init__()
-        self.maxsize(500, 417)
-        self.minsize(500, 417)
+        self.maxsize(500, 617)
+        self.minsize(500, 617)
         self.title('Benutzer hinzufügen')
-        self.canvas = Canvas(width=500, height=417, bg='gray')
+        self.canvas = Canvas(width=500, height=617, bg='gray')
         self.canvas.pack()
         firstname = StringVar()  # Variablen sinngemäß benannt
         lastname = StringVar()
@@ -27,14 +27,11 @@ class AddUserWindow(Tk):
         def addUser():
             if len(firstname.get()) == 0 or len(lastname.get()) == 0 or len(email.get()) == 0 or len(
                     role.get()) == 0:  # Ist eines der Eingabefelder leer?
-                messagebox.showerror("Fehler", "Bitte geben Sie einen Benutzer an!")
+                messagebox.showerror("Fehler", "Bitte füllen Sie alle Felder aus!")
             else:
                 g = 'TRUE'  # Verfügbarkeit des Buchs, wenn ein Buch neu eingepflegt wird, ist es auch logischerweise verfügbar
                 try:
-                    self.conn = mysql.connector.connect(host='localhost',  # Verbindung mit der Datenbank aufbauen
-                                                        database='library_management',
-                                                        user='root',
-                                                        password='1234')
+                    self.conn = db_conn.conn
                     self.myCursor = self.conn.cursor()
                     self.myCursor.execute("Insert into users (firstname,lastname,email,role) values (%s,%s,%s,%s)",
                                           # books in useres geändert... das prinzip gilt für alle
@@ -55,19 +52,21 @@ class AddUserWindow(Tk):
 
         # Labels und Textfelder erstellen
         Label(self, text='').pack()
-        Label(self, text='Benutzer hinzufügen:', bg='gray', fg='black', font=('Arial', 20, 'bold')).place(x=150, y=70)
+        
+        Label(self,text="Benutzer hinzufügen",bg='gray', font=("Arial",25,'bold')).place(relx= 0.5, rely= 0.1, anchor= CENTER)
 
         Label(self, text='').pack()
+        
         Label(self, text='Vorname:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=180)
-
         Entry(self, textvariable=firstname, width=30).place(x=170, y=182)
+        
         Label(self, text='Nachname:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=230)
-
         Entry(self, textvariable=lastname, width=30).place(x=170, y=232)
+        
         Label(self, text='E-Mail:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=280)
-
         Entry(self, textvariable=email, width=30).place(x=170, y=282)
-        Button(self, text="Hinzufügen", command=addUser).place(x=245, y=330)
+        
+        Label(self, text='Rolle:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=330)
 
         OptionList = [
             "Administrator",
@@ -75,9 +74,14 @@ class AddUserWindow(Tk):
             "Kunde"
         ]
         role = StringVar(self)
-        role.set("")
+        role.set("Bitte wählen Sie eine Rolle")
 
-        OptionMenu(self, role, *OptionList).place(x=170, y=350)
+        ttk.Combobox(self,textvariable=role,values=OptionList,width=30,state="readonly").place(x=170, y=330)
+        
+        
+        Button(self, text="Hinzufügen", command=addUser).place(x=210, y=400)
+
+        
 
 
 

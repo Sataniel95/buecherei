@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 import sys
+import db_conn
 
 py = sys.executable
 
@@ -21,23 +22,22 @@ class AddBookWindow(Tk):
         author = StringVar()
         publisher = StringVar()
         category = StringVar()
-        isdn = StringVar()
+        isbn = StringVar()
         stock = StringVar()
 
         # Eingaben überprüfen
         def addBook():
 
-            if len(name.get()) == 0 or len(author.get()) == 0 or len(publisher.get()) == 0 or len(category.get()) == 0 or len(isdn.get()) == 0 or len(stock.get()) == 0: # Ist eines der Eingabefelder leer?
-                messagebox.showerror("Fehler","Bitte geben Sie einen Buchnamen/Autor an!")
+            if len(name.get()) == 0 or len(author.get()) == 0 or len(publisher.get()) == 0 or len(category.get()) == 0 or len(isbn.get()) == 0 or len(stock.get()) == 0: # Ist eines der Eingabefelder leer?
+                messagebox.showerror("Fehler","Bitte füllen Sie alle Felder aus!")
             else:
-                g = 'TRUE' # Verfügbarkeit des Buchs, wenn ein Buch neu eingepflegt wird, ist es auch logischerweise verfügbar
+                ava = 'TRUE' # Verfügbarkeit des Buchs, wenn ein Buch neu eingepflegt wird, ist es auch logischerweise verfügbar
                 try:
-                    self.conn = mysql.connector.connect(host='localhost', # Verbindung mit der Datenbank aufbauen
-                                         database='library_management',
-                                         user='root',
-                                         password='1234')
+                    self.conn = db_conn.conn
                     self.myCursor = self.conn.cursor()
-                    self.myCursor.execute("Insert into books(name,author,publisher,cathegory,isdn,stock) values (%s,%s,%s,%s,%s,%s)",[name.get(),author.get(),publisher.get(), category.get(),isdn.get,amount.get])
+                    self.myCursor.execute("Insert into books(name,author,publisher,category,isbn,stock,availability) values (%s,%s,%s,%s,%s,%s,%s)",[name.get(),author.get(),
+                                                                                                                                         publisher.get(), category.get(),
+                                                                                                                                         isbn.get(),stock.get(),ava])
                     self.conn.commit() # Daten aus den Textfeldern entgegennehmen ([b.get(),c.get(),g]) und in die Datenbak schreiben
 
                     messagebox.showinfo('Erfolg', "{} wurde hinzugefügt!".format(name.get())) #Infofenster bei Erfolg
@@ -52,9 +52,9 @@ class AddBookWindow(Tk):
                     messagebox.showerror("Fehler","Fehler bei der Datenbankverbindung!") # Schlägt die Verbinduung mmit der DB fehl, Error Message
         
         # Labels und Textfelder erstellen
-        Label(self, text='').pack()
+        Label(self, text='').pack() #Leerzeile
 
-        Label(self, text='Buch hinzufügen:',bg='gray',fg='black',font=('Arial', 20, 'bold')).place(x=150, y=70)
+        Label(self,text="Buch hinzufügen",bg='gray', font=("Arial",25,'bold')).place(relx= 0.5, rely= 0.1, anchor= CENTER)
         Label(self, text='').pack()
 
         Label(self, text='Buchname:',bg='gray',fg='black', font=('Arial', 10, 'bold')).place(x=60, y=180)
@@ -69,12 +69,12 @@ class AddBookWindow(Tk):
         Label(self, text='Kategorie:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=330)
         Entry(self, textvariable=category, width=30).place(x=170, y=332)
 
-        Label(self, text='ISDN:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=380)
-        Entry(self, textvariable=isdn, width=30).place(x=170, y=382)
+        Label(self, text='ISBN:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=380)
+        Entry(self, textvariable=isbn, width=30).place(x=170, y=382)
 
         Label(self, text='Menge:', bg='gray', fg='black', font=('Arial', 10, 'bold')).place(x=60, y=430)
         Entry(self, textvariable=stock, width=30).place(x=170, y=432)
 
-        Button(self, text="Hinzufügen", command=addBook).place(x=495, y=300)
+        Button(self, text='Hinzufügen', width=25, font=('Arial', 10), command=addBook).place(x=140,y=500)
 
 AddBookWindow().mainloop()
