@@ -47,7 +47,7 @@ class Search(Tk):
                 try:
                     self.conn = db_conn.conn
                     self.mycursor = self.conn.cursor()
-                    self.mycursor.execute("Select * from books where name LIKE %s",['%'+searchTerm.get()+'%']) # SQL-Statement. Gibt alle Einträge der books Tabelle zurück, 
+                    self.mycursor.execute("Select * from books where title LIKE %s",['%'+searchTerm.get()+'%']) # SQL-Statement. Gibt alle Einträge der books Tabelle zurück, 
                     self.data = self.mycursor.fetchall()                                                                                           
                                                                                                                # welche unseren Suchbegriff in der "name"-Spalte beinhalten
                     if self.data: # Die Antwort der DB überprüfen. Bei einem Treffer haben wir hier eine Liste mit den Daten                                                                             

@@ -35,7 +35,7 @@ class AddBookWindow(Tk):
                 try:
                     self.conn = db_conn.conn
                     self.myCursor = self.conn.cursor()
-                    self.myCursor.execute("Insert into books(name,author,publisher,category,isbn,stock,availability) values (%s,%s,%s,%s,%s,%s,%s)",[name.get(),author.get(),
+                    self.myCursor.execute("Insert into books(title,author,publisher,category,isbn,stock,availability) values (%s,%s,%s,%s,%s,%s,%s)",[name.get(),author.get(),
                                                                                                                                          publisher.get(), category.get(),
                                                                                                                                          isbn.get(),stock.get(),ava])
                     self.conn.commit() # Daten aus den Textfeldern entgegennehmen ([b.get(),c.get(),g]) und in die Datenbak schreiben
