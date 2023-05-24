@@ -30,7 +30,10 @@ class MainWin(Tk):
             os.system('%s %s' % (py,'add_user.py'))
             
         def searchBook():
-            os.system('%s %s' % (py,'search_book.py'))        
+            os.system('%s %s' % (py,'search_book.py'))
+        
+        def searchUser():
+            os.system('%s %s' % (py,'search_user.py'))            
         
         # Überschrift
         Label(self,text="Willkommen!",bg='gray', font=("Arial",35,'bold')).place(relx= 0.5, rely= 0.1, anchor= CENTER)
@@ -41,6 +44,8 @@ class MainWin(Tk):
         self.button = Button(self, text='Benutzer hinzufügen', width=25, font=('Arial', 10), command=addUser).place(x=440,y=250)
         
         self.button = Button(self, text='Buch suchen', width=25, font=('Arial', 10), command=searchBook).place(x=740,y=250)
+        
+        self.button = Button(self, text='Benutzer suchen', width=25, font=('Arial', 10), command=searchUser).place(x=1040,y=250)
         
         # Tabelle erstellen
         self.listTree = ttk.Treeview(self,height=14,columns=('Kunde','Buch','Ausgeliehen am','Rückgabe am'))
@@ -60,6 +65,6 @@ class MainWin(Tk):
         self.listTree.place(x=320,y=360)
         #self.vsb.place(x=1028,y=361,height=287)
         self.hsb.place(x=320,y=650,width=700)
-        ttk.Style().configure("Treeview",font=('Times new Roman',15))
+        ttk.Style().configure("Treeview",font=('Times new Roman',11))
         
 MainWin().mainloop()
