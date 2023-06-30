@@ -7,6 +7,9 @@ from ttkbootstrap.constants import *
 import ttkthemes 
 from gui_HoverButton import HoverButton
 from PIL import Image, ImageTk
+from datetime import datetime
+from datetime import timedelta
+
 
 class LendBooks(ttk.Frame):
     
@@ -31,13 +34,21 @@ class LendBooks(ttk.Frame):
         
         self.create_books_table()
         self.create_lend_table()
+        self.create_menu()
+    
+    def create_menu(self):
+        
+        self.lend_book_btn1 = HoverButton(self, text="Ausleihen", command=self.insert_lend_data, bg="#141414",
+                                        font=("Verdana" ,"15", "underline"), activebackground="#141414", 
+                                        activeforeground="#df4807")
+        self.lend_book_btn1.place(relx=0.03, rely=0.02)
         
     def create_lend_table(self):
         
         # Daten für die Spalten
         self.coldata = [
-             {"text": "Leihnummer", "stretch": False, "width":75},
-             {"text": "Titel", "stretch": False, "width":200},
+             {"text": "Leihnummer", "stretch": False, "width":125},
+             {"text": "Titel", "stretch": False, "width":185},
              {"text": "geliehen von", "stretch": False, "width":200},
              {"text": "geliehen am", "stretch": False, "width":200},
              {"text": "Rückgabedatum", "stretch": False, "width":200}
@@ -47,7 +58,7 @@ class LendBooks(ttk.Frame):
         self.rowdata = self.get_lend_data()
         
         # Tabelle definieren
-        self.books_table = Tableview(
+        self.lend_table = Tableview(
             master=self.top_main_frame,
             coldata=self.coldata,
             rowdata=self.rowdata,
@@ -59,7 +70,7 @@ class LendBooks(ttk.Frame):
             pagesize=5,
         )
         # Tabelle plazieren
-        self.books_table.place(relx=0.01, rely=0.25)
+        self.lend_table.place(relx=0.01, rely=0.25)
         
         # Style für die Tabelle
         style = ttk.Style(self)                                                                                    
@@ -138,4 +149,45 @@ class LendBooks(ttk.Frame):
                 
             except:
                 messagebox.showerror("Fehler" , "Fehler bei der Datenbankverbindung!")
+
+    def insert_lend_data(self):
+        
+        self.get_date()
+        self.lenddate = self.today
+        
+        # +14 Tage
+        self.returndate = self.lenddate + timedelta(days = 14)
+        print(self.returndate)
+        
+        self.get_row_data()
+        self.rowdata = self.row
+        
+        
+        print(self.rowdata)
+        print(self.rowdata[0].values[0])
+        
+        try:
+            self.conn = db_conn.conn
+            self.myCursor = self.conn.cursor()
+            self.myCursor.execute("Insert into lend_books(book_title,lenddate,returndate) values (%s,%s,%s)",[self.rowdata[0].values[0],self.lenddate,self.returndate])
+            self.conn.commit() # Daten aus den Textfeldern entgegennehmen ([b.get(),c.get(),g]) und in die Datenbak schreiben
+
+            self.create_lend_table()
+            #messagebox.showinfo('Erfolg', "{} wurde hinzugefügt!".format(self.name.get())) #Infofenster bei Erfolg
+          
+              
+        except Error:
+            messagebox.showerror("Fehler","Fehler bei der Datenbankverbindung!") # Schlägt die Verbinduung mmit der DB fehl, Error Message
+
+    def get_row_data(self):
+        
+        self.row = self.books_table.get_rows(selected=True)
+        
+        print(self.row[0].values[0])
+        return self.row    
     
+    def get_date(self):
+        
+        self.today = datetime.now()
+        print(self.today)
+        return self.today
